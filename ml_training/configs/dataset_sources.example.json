@@ -1,0 +1,15 @@
+{
+  "sources": [
+    {
+      "name": "replace-with-dataset-name",
+      "url": "https://replace-with-official-dataset-download-url",
+      "archive_name": "dataset.zip",
+      "sha256": "replace-with-published-or-locally-verified-sha256",
+      "license": "replace-with-exact-license-name",
+      "license_url": "https://replace-with-license-url",
+      "attribution": "replace-with-required-attribution",
+      "accepted": false,
+      "destination": "datasets/raw/replace-with-dataset-name"
+    }
+  ]
+}

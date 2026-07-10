@@ -1,0 +1,2 @@
+# Backward-compatible alias for the optional production vision runtime.
+-r requirements-vision.txt

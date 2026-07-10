@@ -1,0 +1,61 @@
+# Python
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+
+# Node / Next.js
+node_modules/
+.next/
+out/
+npm-debug.log*
+
+# Secrets
+.env
+.env.local
+backend/.env
+frontend/.env.local
+
+# Runtime data and model caches
+backend/vision.db
+backend/storage/vision/*
+!backend/storage/vision/.gitkeep
+backend/storage/dataset_candidates/*
+!backend/storage/dataset_candidates/README.md
+!backend/storage/dataset_candidates/pending/
+backend/storage/dataset_candidates/pending/*
+!backend/storage/dataset_candidates/pending/.gitkeep
+backend/model_artifacts/*.onnx
+backend/model_artifacts/*.pt
+backend/model_artifacts/*.pth
+backend/model_artifacts/*.tflite
+backend/model_artifacts/*.engine
+ml_training/.venv/
+ml_training/models/*
+!ml_training/models/.gitkeep
+ml_training/reports/*
+!ml_training/reports/.gitkeep
+.DS_Store
+
+# Environment variables and secrets
+.env
+.env.local
+backend/.env
+frontend/.env.local
+
+# Python
+.venv/
+venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# Node / Next.js
+node_modules/
+.next/
+dist/
+build/
+
+# macOS
+.DS_Store
