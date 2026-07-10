@@ -1,0 +1,9 @@
+{
+  "name": "agrisarthi-fullstack-working",
+  "private": true,
+  "scripts": {
+    "backend": "start_backend.bat",
+    "frontend": "start_frontend.bat",
+    "dev": "start_all.bat"
+  }
+}
