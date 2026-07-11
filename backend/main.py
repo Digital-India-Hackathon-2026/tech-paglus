@@ -1,5 +1,3 @@
-from contextlib import asynccontextmanager
-
 from dotenv import load_dotenv
 from fastapi import Depends, FastAPI, File, Form, HTTPException, UploadFile, Request
 from fastapi.middleware.cors import CORSMiddleware
@@ -60,11 +58,8 @@ from services.auth_service import (
     decode_token,
     get_user_by_id,
 )
-from services.vision import initialize_vision_system
-from services.vision.api import router as vision_router
 
 import logging
-import os
 import time
 from concurrent.futures import ThreadPoolExecutor
 
@@ -72,35 +67,19 @@ load_dotenv()
 init_db()  # Initialize SQLite database tables
 init_auth_db()  # Initialize the users table
 
-@asynccontextmanager
-async def lifespan(_: FastAPI):
-    # Load configured vision models once per FastAPI worker. Missing weights keep
-    # the service in explicit development mode instead of generating fake results.
-    initialize_vision_system()
-    yield
-
-
 app = FastAPI(
     title="AgriSarthi AI Web API",
-    description="Crop advisory plus the AI Crop Pest and Disease Vision Analyzer.",
-    version="4.0.0",
-    lifespan=lifespan,
+    description="Crop, mandi, seed, fertilizer, weather-risk and FPO dashboard backend.",
+    version="3.0.0",
 )
 
-cors_origins = [
-    origin.strip()
-    for origin in os.getenv("CORS_ALLOWED_ORIGINS", "http://localhost:3000,http://127.0.0.1:3000").split(",")
-    if origin.strip()
-]
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=cors_origins or ["http://localhost:3000"],
+    allow_origins=["*"],
     allow_credentials=True,
-    allow_methods=["GET", "POST", "OPTIONS"],
-    allow_headers=["Authorization", "Content-Type", "Accept"],
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
-
-app.include_router(vision_router)
 
 # ---------------------------------------------------------------------------
 # Performance helpers

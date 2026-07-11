@@ -1,2 +1,6 @@
-# Backward-compatible alias for the optional production vision runtime.
--r requirements-vision.txt
+# Optional neural-network inference dependencies.
+# Install only after the normal backend works:
+#   python3 -m pip install -r requirements-ml.txt
+onnxruntime>=1.20.0
+numpy>=1.26.0
+opencv-python-headless>=4.10.0

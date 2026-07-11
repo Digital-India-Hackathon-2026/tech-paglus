@@ -77,8 +77,11 @@ const StepRow = memo(function StepRow({ index, text, checked, onToggle }) {
 function CropPlan({ cropId }) {
   const router = useRouter();
   const searchParams = useSearchParams();
-   const returnStep = searchParams.get('returnStep');
-   const goHome = () => router.push(returnStep ? `/?step=${returnStep}` : '/');
+  // Which wizard step on the home page to return to when this plan is
+  // exited (e.g. 4 = Plan & Schemes / Mandi Prices). Falls back to the
+  // home page's default (step 0) if not provided.
+  const returnStep = searchParams.get('returnStep');
+  const goHome = () => router.push(returnStep ? `/?step=${returnStep}` : '/');
   const plan = useMemo(() => getCropStages(cropId), [cropId]);
   const [sessionId, setSessionId] = useState('default');
   const [stageIndex, setStageIndex] = useState(0);
@@ -270,9 +273,9 @@ function CropPlan({ cropId }) {
               Skip to next <ArrowRight className="h-4 w-4 ml-2" />
             </Button>
           ) : (
-           <Button onClick={goHome} className="h-11 px-5 bg-emerald-600 hover:bg-emerald-700">
-  Finish & return <CheckCircle2 className="h-4 w-4 ml-2" />
-</Button>
+            <Button onClick={goHome} className="h-11 px-5 bg-emerald-600 hover:bg-emerald-700">
+              Finish & return <CheckCircle2 className="h-4 w-4 ml-2" />
+            </Button>
           )}
         </div>
       </main>

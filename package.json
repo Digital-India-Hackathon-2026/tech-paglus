@@ -2,13 +2,8 @@
   "name": "agrisarthi-fullstack-working",
   "private": true,
   "scripts": {
-    "backend": "bash ./start_backend.sh",
-    "frontend": "bash ./start_frontend.sh",
-    "dev": "bash ./start_all.sh",
-    "backend:windows": "start_backend.bat",
-    "frontend:windows": "start_frontend.bat",
-    "dev:windows": "start_all.bat",
-    "test:backend": "cd backend && python3 -m pytest -q",
-    "test:frontend": "cd frontend && npm run test:e2e"
+    "backend": "start_backend.bat",
+    "frontend": "start_frontend.bat",
+    "dev": "start_all.bat"
   }
 }

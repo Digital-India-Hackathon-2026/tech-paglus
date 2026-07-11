@@ -1,5 +1,0 @@
-{
-  "schema_version": "1.0",
-  "description": "Only records marked verified are eligible for commercial recommendations. Empty by default to prevent unsafe or invented chemical advice.",
-  "records": []
-}

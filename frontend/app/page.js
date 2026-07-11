@@ -18,6 +18,7 @@ import { LOGOUT } from '@/lib/constants/testIds/auth';
 import NotificationBell from '@/components/NotificationBell';
 import { useNotifications, buildSmartAlerts } from '@/hooks/use-notifications';
 import { useLanguage } from '@/lib/language';
+import SchemesSection from '@/components/SchemesSection';
 
 const STATUS = { idle:'idle', listening:'listening', thinking:'thinking', locating:'locating', readingPdf:'readingPdf', checkingMandi:'checkingMandi', checkingWeather:'checkingWeather', preparing:'preparing', speaking:'speaking' };
 
@@ -102,20 +103,26 @@ function AppContent(){
   const [status, setStatus] = useState('idle');
   const [sessionId] = useState(() => (typeof window!=='undefined'?getSessionId():'srv'));
   const speech = useSpeech(lang);
-    const [pageIndex, setPageIndexState] = useState(() => {
-     if (typeof window === 'undefined') return 0;
-     const stepParam = new URLSearchParams(window.location.search).get('step');
-     const parsed = parseInt(stepParam, 10);
-     return Number.isFinite(parsed) ? Math.max(0, Math.min(PAGES.length - 1, parsed)) : 0;
-   });
-   const setPageIndex = (i) => {
-     setPageIndexState(i);
-     if (typeof window !== 'undefined') {
-       const url = new URL(window.location.href);
-       url.searchParams.set('step', String(i));
-       window.history.replaceState({}, '', url);
-     }
-   };
+  // Step index for the wizard. Initialized from ?step= in the URL so that
+  // returning from a sub-route (e.g. the crop production plan page) can
+  // land the person back on a specific step (like Mandi Prices) instead of
+  // always resetting to step 0 (Location & Farm / map).
+  const [pageIndex, setPageIndexState] = useState(() => {
+    if (typeof window === 'undefined') return 0;
+    const stepParam = new URLSearchParams(window.location.search).get('step');
+    const parsed = parseInt(stepParam, 10);
+    return Number.isFinite(parsed) ? Math.max(0, Math.min(PAGES.length - 1, parsed)) : 0;
+  });
+  // Keep the URL's ?step= param in sync so refreshes / back-navigation
+  // preserve the current wizard step too.
+  const setPageIndex = (i) => {
+    setPageIndexState(i);
+    if (typeof window !== 'undefined') {
+      const url = new URL(window.location.href);
+      url.searchParams.set('step', String(i));
+      window.history.replaceState({}, '', url);
+    }
+  };
   const notifications = useNotifications(sessionId);
 
   const [location, setLocation] = useState({ query:'', lat:null, lon:null, state:'', district:'', village:'', confidence:'' });
@@ -239,9 +246,13 @@ function AppContent(){
 
   function goToPage(i){ setPageIndex(Math.max(0, Math.min(PAGES.length-1, i))); if (typeof window!=='undefined') window.scrollTo({top:0, behavior:'smooth'}); }
   function openCropPlan(id){
-     pickCrop(id);
-     router.push(`/crop/${id}?returnStep=4`);
-   }
+    pickCrop(id);
+    // Pass along the step to return to (Plan & Schemes / Mandi Prices,
+    // index 4) so the crop production plan page's "Finish & return" button
+    // can send the person back there instead of resetting to step 0.
+    router.push(`/crop/${id}?returnStep=4`);
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-lime-50 to-amber-50">
       <Toaster position="top-right" richColors />
@@ -312,6 +323,7 @@ function AppContent(){
                   {speech.listening ? <><MicOff className="h-4 w-4 mr-2"/> {T.stopVoice}</> : <><Mic className="h-4 w-4 mr-2"/> {T.startVoice}</>}
                 </Button>
                 <a href="/pest-guard" className="inline-flex h-12 items-center justify-center rounded-xl border border-amber-200 bg-amber-50 px-4 text-sm font-semibold text-amber-900 hover:bg-amber-100">📷 Live pest & animal guard</a>
+                <a href="/community" className="inline-flex h-12 items-center justify-center rounded-xl border border-emerald-200 bg-emerald-50 px-4 text-sm font-semibold text-emerald-900 hover:bg-emerald-100">🤝 Community</a>
                 {advisory?.voice && (
                   <div className="flex gap-1">
                     <Button variant="outline" size="sm" onClick={()=>speech.speak(advisory.voice)}><Volume2 className="h-3 w-3 mr-1"/>{T.speak}</Button>
@@ -528,12 +540,7 @@ function AppContent(){
         )}
 
         {/* SCHEMES */}
-        <Card><CardHeader className="pb-2"><CardTitle className="text-base flex items-center gap-2"><Info className="h-4 w-4 text-indigo-600"/> Government schemes for you</CardTitle></CardHeader><CardContent className="grid md:grid-cols-2 gap-3 text-sm">
-          <div className="rounded-lg border p-3"><div className="font-semibold text-indigo-800">PM-KISAN</div><div className="text-xs text-slate-600">₹6,000/year direct benefit to eligible farmers.</div></div>
-          <div className="rounded-lg border p-3"><div className="font-semibold text-indigo-800">PMFBY (Fasal Bima)</div><div className="text-xs text-slate-600">Crop insurance — low premium against weather losses.</div></div>
-          <div className="rounded-lg border p-3"><div className="font-semibold text-indigo-800">Soil Health Card</div><div className="text-xs text-slate-600">Free soil testing every 2 years.</div></div>
-          <div className="rounded-lg border p-3"><div className="font-semibold text-indigo-800">PMKSY (Micro-Irrigation)</div><div className="text-xs text-slate-600">55-90% subsidy on drip/sprinkler for small/marginal farmers.</div></div>
-        </CardContent></Card>
+        <SchemesSection />
         </>
         )}
 
